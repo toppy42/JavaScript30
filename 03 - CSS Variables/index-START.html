@@ -26,6 +26,12 @@
       misc styles, nothing to do with CSS variables
     */
 
+    :root {
+      --main-color: white;
+      --image-sizing: 10px;
+      --image-blur: 0px;
+    }
+
     body {
       text-align: center;
       background: #193549;
@@ -42,10 +48,83 @@
     input {
       width:100px;
     }
+
+    img {
+      background-color: var(--main-color);
+      padding: var(--image-sizing);
+      filter: blur(var(--image-blur));
+    }
+
+    .hl {
+      color: var(--main-color);
+    }
   </style>
 
   <script>
+
+  function applyImagePadding(size){
+    document.documentElement.style.setProperty('--image-sizing', `${size}px`);
+  }
+
+  function applyColor(color){
+    document.documentElement.style.setProperty('--main-color', color);
+  }
+
+  function applyBlur(blurPixels){
+    document.documentElement.style.setProperty('--image-blur', `${blurPixels}px`);
+  }
+
+  // This can be dried up by selecting all inputs on the page and applying the event listener
+  // Also, can use the "change" event rather than the "input" event but then we have to
+  // also use the mouse move event to trigger the change.
+
+  // He names the variables the same as their input names so that it doesn't have
+  // to be explicit functions and it's more DRY
+  function bindColorInput() {
+    document.getElementById('base').addEventListener('input', function(event){
+      applyColor(event.srcElement.value);
+    });
+  }
+
+  function bindSpacingInput() {
+    document.getElementById('spacing').addEventListener('input', function(event){
+      applyImagePadding(event.srcElement.value);
+    });
+  }
+
+  function bindBlurInput() {
+    document.getElementById('blur').addEventListener('input', function(event){
+      applyBlur(event.srcElement.value);
+    });
+  }
+
+  function applyInitialState(){
+    applyColor(document.getElementById('base').value);
+    applyImagePadding(document.getElementById('spacing').value);
+    applyBlur(document.getElementById('blur').value);
+  }
+
+  function bindAll(){
+    bindColorInput();
+    bindSpacingInput();
+    bindBlurInput();
+  }
+
+  bindAll();
+  applyInitialState();
+
   </script>
 
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
