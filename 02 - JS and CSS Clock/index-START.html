@@ -57,18 +57,109 @@
     }
 
     .hand {
-      width:50%;
       height:6px;
       background:black;
       position: absolute;
       top:50%;
+      transform-origin: 100%;
+
+      /* From the video */
+      transform: rotate(90deg);
+      transition: all 0.05s;
+      transition-timing-function: cubic-bezier(0, 1.35, 0, 2.05);
+    }
+
+    .second-hand {
+      width: 50%;
+      left: 0%;
+    }
+
+    .min-hand {
+      width: 40%;
+      left: 10%;
+    }
+
+    .hour-hand {
+      width: 30%;
+      left: 20%;
     }
 
   </style>
 
-  <script>
 
+<script>
+    // Apply a transform to an element
+    // NOTE this is causing a weird moment when degrees starts over 449 -> 90
+    function applyRotation(element, degrees){
+      if (degrees === 90){
+        element.style.transition = "none";
+      }
+      element.style.transform = `rotate(${degrees}deg)`;
+
+      if (degrees === 90){
+        element.style.transition = "all 0.05s";
+      }
+    }
+
+    // calculate the degree amounts
+    function calcDegrees(current, max){
+      return current/max * 360 + 90;
+    }
+
+    // degree amount for minutes/hours/seconds
+      // update all hands
+    function updateClock(){
+      var date = new Date();
+      updateSeconds(date);
+      updateHours(date);
+      updateMinutes(date);
+
+      // Every second do an update
+      setTimeout(updateClock, 1000);
+    }
+
+    function updateHours(date){
+      var hours = date.getHours();
+      var degrees = calcDegrees(hours, 12);
+      var hourHand = document.getElementsByClassName('hour-hand')[0];
+
+      if (hourHand){
+        applyRotation(hourHand, degrees);
+      }
+    }
+
+    function updateSeconds(date){
+      var seconds = date.getSeconds();
+      var degrees = calcDegrees(seconds, 60);
+      var secondHand = document.getElementsByClassName('second-hand')[0];
+
+      if (secondHand){
+        applyRotation(secondHand, degrees);
+      }
+    }
+
+    function updateMinutes(date){
+      var minutes = date.getMinutes();
+      var degrees = calcDegrees(minutes, 60);
+      var minuteHand = document.getElementsByClassName('min-hand')[0];
+
+      if (minuteHand){
+        applyRotation(minuteHand, degrees);
+      }
+    }
+
+    // updateClock();
 
   </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
